@@ -84,7 +84,27 @@ gcc cp01.c -o cp01
 ./cp01 cp01.c cp02.c
 ```
 
+## 改变文件的当前位置
 
+Unix每次打开一个文件都会保存一个指针，以记录文件的当前位置。
 
+<center><img src="https://s2.loli.net/2022/01/14/nXZRVW1w2bvSqCY.png" width=60%></center>
 
+当从文件读/写数据时，内核从指针所标明的地方开始，读/写取指定的字节，然后移动位置指针，指向下一个未被读/写的字节。指针与*文件描述符*相关联，而不是与文件关联，所以如果两个程序同时打开一个文件，此时有两个指针，两个程序对文件的读/写操作不会互相干扰。
+
+系统调用`lseek`可以改变已打开文件的当前位置
+
+``` c
+/*
+ * lseek: reposition read/write file offset
+ * off_t oldpos = lseek(int fd, off_t dist, int base)
+ * fd: file identifier
+ * dist: move distance
+ * base: SEEK_SET -> begin location of the file
+         SEEK_CUR -> current location of the file
+         SEEK_END -> end location of the file
+ * oldpos: -1        if occurs error
+           oldpos    pointer position before changes
+*/
+```
 
